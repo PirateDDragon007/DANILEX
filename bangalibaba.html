@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangali Baba | The One Who Watches From The Smoke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0705;
+    --bg2:#120d0a;
+    --ember:#ff5b1f;
+    --ember-dim:#7a2c0f;
+    --smoke:#8a8378;
+    --text:#d8cfc0;
+    --blood:#5c0a0a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,91,31,0.06), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'EB Garamond', serif;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* flicker overlay */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.15);
+    pointer-events:none;
+    z-index:999;
+    animation:flicker 6s infinite;
+  }
+  @keyframes flicker{
+    0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;}
+    20%,24%,55%{opacity:0.75;}
+  }
+
+  /* drifting fog */
+  .fog{
+    position:fixed;
+    top:0; left:0; width:200%; height:100%;
+    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><filter id="f"><feTurbulence baseFrequency="0.008" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 0.35  0 0 0 0 0.33  0 0 0 0 0.30  0 0 0 0.35 0"/></filter><rect width="100%25" height="100%25" filter="url(%23f)"/></svg>');
+    opacity:0.5;
+    pointer-events:none;
+    z-index:1;
+    animation:drift 90s linear infinite;
+  }
+  @keyframes drift{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  header{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:90px 20px 60px;
+    border-bottom:1px solid var(--ember-dim);
+  }
+  h1.title{
+    font-family:'Creepster', cursive;
+    font-weight:900;
+    -webkit-text-stroke:1.5px #ffd400;
+    font-size:4.2rem;
+    color:#ffd400;
+    text-shadow:0 0 10px rgba(255,212,0,0.7), 0 0 35px rgba(255,212,0,0.35);
+    letter-spacing:3px;
+    margin:0;
+  }
+  .nimbu-mirchi{
+    display:inline-block;
+    font-size:0.5em;
+    vertical-align:middle;
+    margin-left:6px;
+    filter:drop-shadow(0 0 6px rgba(255,212,0,0.5));
+    animation:sway 3.5s ease-in-out infinite;
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(-6deg);}
+    50%{transform:rotate(6deg);}
+  }
+  .subtitle{
+    color:var(--smoke);
+    font-style:italic;
+    letter-spacing:2px;
+    margin-top:10px;
+    font-size:1.1rem;
+  }
+
+  main{
+    position:relative;
+    z-index:2;
+    max-width:820px;
+    margin:0 auto;
+    padding:60px 24px;
+  }
+
+  section{
+    margin-bottom:70px;
+  }
+
+  h2{
+    font-family:'Creepster', cursive;
+    color:var(--ember);
+    font-size:1.9rem;
+    letter-spacing:1px;
+    text-shadow:0 0 6px rgba(255,91,31,0.4);
+    border-left:3px solid var(--blood);
+    padding-left:14px;
+  }
+
+  p{
+    line-height:1.85;
+    font-size:1.12rem;
+    color:var(--text);
+  }
+
+  .altar-divider{
+    text-align:center;
+    color:var(--ember-dim);
+    letter-spacing:14px;
+    margin:40px 0;
+    font-size:1.3rem;
+  }
+
+  .warning{
+    border:1px dashed var(--blood);
+    padding:18px 22px;
+    background:rgba(92,10,10,0.12);
+    color:#c9a89a;
+    font-style:italic;
+  }
+
+  .relics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+    margin-top:24px;
+  }
+  .relic{
+    background:linear-gradient(180deg, rgba(255,91,31,0.05), transparent);
+    border:1px solid var(--ember-dim);
+    padding:18px;
+    text-align:center;
+  }
+  .relic h3{
+    font-family:'Creepster',cursive;
+    color:var(--ember);
+    margin:0 0 8px;
+    font-size:1.15rem;
+  }
+  .relic p{
+    font-size:0.95rem;
+    color:var(--smoke);
+    margin:0;
+  }
+
+  /* comments */
+  #comments h2{margin-bottom:30px;}
+  .comment{
+    border-top:1px solid #241a14;
+    padding:22px 4px;
+  }
+  .comment:first-of-type{border-top:none;}
+  .comment-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .comment-name{
+    font-weight:600;
+    color:#ff7a1f;
+    font-size:1.02rem;
+  }
+  .comment-name a{
+    color:#ff7a1f;
+    text-decoration:underline;
+    text-decoration-color:var(--ember-dim);
+  }
+  .comment-name a:hover{
+    color:#fff;
+    text-shadow:0 0 6px #ff7a1f;
+  }
+  .comment-time{
+    color:var(--smoke);
+    font-size:0.85rem;
+    font-style:italic;
+  }
+  .comment-body{
+    color:#c8beae;
+    font-size:1.02rem;
+    line-height:1.6;
+  }
+
+  footer{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:50px 20px 80px;
+    color:var(--ember-dim);
+    font-style:italic;
+    letter-spacing:1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="fog"></div>
+
+<header>
+  <h1 class="title">Bangali Baba<span class="nimbu-mirchi">🍋🌶️</span></h1>
+  <div class="subtitle">He does not sleep. He only waits behind the smoke.</div>
+</header>
+
+<main>
+
+  <section id="about">
+    <h2>Who Is Bangali Baba</h2>
+    <p>
+      Deep in the crumbling lanes behind the old jute mill, past the banyan tree whose roots
+      are said to have swallowed three separate roads over the decades, there is a door that
+      is never fully closed. Behind it lives a man the neighborhood no longer names aloud —
+      they simply call him <strong>Bangali Baba</strong>.
+    </p>
+    <p>
+      No one remembers when he arrived. The oldest resident on the street, a woman well into
+      her nineties, insists he looked exactly the same when she was a child — same clouded
+      eyes, same grey-streaked beard, same low laugh that seems to come from somewhere behind
+      you rather than in front. He keeps no calendar. He keeps no clock. Time, in his room,
+      is said to move differently — visitors who stay for what feels like minutes often
+      return home to find hours, sometimes an entire evening, missing from their lives.
+    </p>
+  </section>
+
+  <div class="altar-divider">☠ ✦ ☠</div>
+
+  <section id="the-room">
+    <h2>The Room Behind The Curtain</h2>
+    <p>
+      His room smells permanently of scorched hair and clove smoke. A single oil lamp burns
+      at all hours, though no one has ever seen it refilled. The walls are lined with
+      photographs of people no one recognizes — some of them, visitors swear, blink when
+      you're not looking directly at them. In the corner sits a brass bowl that is never
+      empty, no matter how much ash is scraped from it.
+    </p>
+    <p>
+      He speaks rarely, and when he does, his voice arrives half a second before his lips
+      move — a detail almost everyone notices and almost no one mentions out loud, as if
+      saying it might make it more real than it already is.
+    </p>
+  </section>
+
+  <div class="altar-divider">☠ ✦ ☠</div>
+
+  <section id="relics">
+    <h2>What He Keeps</h2>
+    <div class="relics">
+      <div class="relic">
+        <h3>The Red Thread</h3>
+        <p>Tied only after midnight. Those who wear it say their dreams stop belonging to them.</p>
+      </div>
+      <div class="relic">
+        <h3>The Ash Bowl</h3>
+        <p>Said to hold the remains of every promise ever broken in his presence.</p>
+      </div>
+      <div class="relic">
+        <h3>The Second Shadow</h3>
+        <p>Visitors sometimes leave with one more shadow than they arrived with. It fades in a week. Usually.</p>
+      </div>
+      <div class="relic">
+        <h3>The Silent Bell</h3>
+        <p>It has no clapper, yet is heard ringing on the nights someone in the lane passes away.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="altar-divider">☠ ✦ ☠</div>
+
+  <section id="warning">
+    <h2>Before You Knock</h2>
+    <div class="warning">
+      They say he only answers the door for those who were already going to knock, whether
+      they meant to or not. If you find yourself standing before that door with no memory of
+      walking there — do not look behind you. And whatever he offers you, remember: nothing
+      leaves that room for free.
+    </div>
+  </section>
+
+</main>
+
+<section id="comments">
+  <main style="padding-top:0;">
+    <h2>Whispers From Those Who Visited</h2>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">shadow.lurker@nightmail.net</span>
+        <span class="comment-time">3 nights ago</span>
+      </div>
+      <div class="comment-body">I only meant to walk past his lane. I don't remember the last hour. My red thread is still tied and I never asked for it.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">agnesblackwood@hollowpost.com</span>
+        <span class="comment-time">1 week ago</span>
+      </div>
+      <div class="comment-body">The lamp was burning when I walked in and it was still burning when I left, six hours later than I thought. Nobody refilled it. I checked.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">ravindra.n@duskbox.in</span>
+        <span class="comment-time">2 weeks ago</span>
+      </div>
+      <div class="comment-body">He knew my grandfather's name before I said it. My grandfather has been dead for eleven years.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">theQuietOne@graveline.org</span>
+        <span class="comment-time">2 weeks ago</span>
+      </div>
+      <div class="comment-body">I counted one shadow on my way in. I counted two on my way out. It took nine days to go back to one.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">mira.k@emberveil.co</span>
+        <span class="comment-time">3 weeks ago</span>
+      </div>
+      <div class="comment-body">The bell rang the night before my neighbor passed. I used to think it was a story people told. I don't think that anymore.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">deshpande.arjun@lanternrot.net</span>
+        <span class="comment-time">1 month ago</span>
+      </div>
+      <div class="comment-body">His voice reaches you before his mouth moves. I sat there trying to convince myself I imagined it. I did not imagine it.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">the.hollow.girl@duskmail.io</span>
+        <span class="comment-time">1 month ago</span>
+      </div>
+      <div class="comment-body">I went in with a question about my brother. I left with an answer I never asked for and I wish I still didn't have it.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">oldbanyanwatcher@crypt.co</span>
+        <span class="comment-time">1 month ago</span>
+      </div>
+      <div class="comment-body">The photographs on his wall. One of them was of me. I have never been photographed like that in my life.</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <a class="comment-name" href="https://jmail.world" target="_blank" rel="noopener noreferrer">jmail.world</a>
+        <span class="comment-time">2 months ago</span>
+      </div>
+      <div class="comment-body">you want some "PIZZA" or "PASTA".</div>
+    </div>
+
+    <div class="comment">
+      <div class="comment-head">
+        <span class="comment-name">nocturne.faded@ravenbox.net</span>
+        <span class="comment-time">2 months ago</span>
+      </div>
+      <div class="comment-body">I don't visit that lane after dark anymore. I don't visit it before dark either, honestly. Some doors should just stay closed.</div>
+    </div>
+
+  </main>
+</section>
+
+<footer>
+  This page is a work of fiction. Bangali Baba is not real. Probably.
+</footer>
+
+</body>
+</html>
