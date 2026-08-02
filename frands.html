@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DD's Web Log :: Department of Digital Dispatches (GoI-Style Personal Portal)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Martel:wght@400;600;800&family=Mukta:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#0f3f7a;
+    --link:#00408f;
+    --saffron:#ff9933;
+    --green:#0e7a1a;
+    --paper:#f2ede1;
+    --paper-2:#e9e0cd;
+    --ink:#1c1a15;
+    --ink-soft:#4a463c;
+    --red:#a3242c;
+    --gold:#a97a1d;
+    --line:#c9bfa4;
+    --card:#fbf8f1;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Mukta',Arial,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  body.contrast{
+    --paper:#000;
+    --paper-2:#111;
+    --ink:#fff;
+    --ink-soft:#e8e8e8;
+    --card:#0d0d0d;
+    --line:#555;
+    --link:#7fb8ff;
+  }
+  h1,h2,h3,.display{
+    font-family:'Martel',Georgia,serif;
+    font-weight:800;
+    margin:0;
+    letter-spacing:.2px;
+  }
+  .mono{font-family:'Courier Prime',monospace;}
+  a{color:var(--link);}
+  a:focus-visible, button:focus-visible, .tab:focus-visible{
+    outline:3px solid var(--saffron);
+    outline-offset:2px;
+  }
+  .skip-link{
+    position:absolute; left:-999px; top:0;
+    background:#fff; color:#000; padding:.6em 1em; z-index:200;
+  }
+  .skip-link:focus{ left:8px; top:8px; }
+
+  /* ACCESSIBILITY BAR */
+  .a11y-bar{
+    background:#050d1c; color:#cfd8e6; font-size:12.5px;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:5px 14px; flex-wrap:wrap; gap:6px;
+  }
+  .a11y-bar .left, .a11y-bar .right{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .a11y-bar a{color:#cfd8e6; text-decoration:none; border-right:1px solid #33415c; padding-right:12px;}
+  .a11y-bar a:last-child{border-right:none;}
+  .txt-btns button, .contrast-btn{
+    background:#1a2c4c; color:#e8edf5; border:1px solid #33415c;
+    font-size:11px; padding:2px 7px; cursor:pointer; border-radius:2px;
+  }
+  .txt-btns button:hover, .contrast-btn:hover{background:#2a4372;}
+
+  /* TRICOLOR STRIPE */
+  .tricolor{ height:5px; display:flex; }
+  .tricolor span{flex:1;}
+  .tricolor .s1{background:var(--saffron);}
+  .tricolor .s2{background:#fff;}
+  .tricolor .s3{background:var(--green);}
+
+  /* HEADER */
+  header.site-header{
+    background:linear-gradient(180deg, var(--card), var(--paper));
+    border-bottom:1px solid var(--line);
+    padding:18px 20px 14px;
+  }
+  .header-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    justify-content:space-between;
+  }
+  .brand{display:flex; align-items:center; gap:14px;}
+  .seal{
+    width:58px; height:58px; border-radius:50%;
+    border:3px solid var(--navy);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; flex:none; background:var(--card);
+  }
+  .seal svg{width:36px; height:36px;}
+  .brand-text .eyebrow{
+    font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--gold); font-weight:700; margin-bottom:2px;
+  }
+  .brand-text h1{font-size:26px; color:var(--navy); line-height:1.15;}
+  .brand-text .hindi{font-size:13px; color:var(--ink-soft); margin-top:3px;}
+  .header-meta{
+    text-align:right; font-size:12.5px; color:var(--ink-soft);
+  }
+  .header-meta .clock{font-family:'Courier Prime',monospace; font-size:13px; color:var(--navy);}
+
+  /* MARQUEE */
+  .ticker{
+    background:var(--navy); color:#f6e6bd; padding:7px 0;
+    overflow:hidden; white-space:nowrap; border-top:1px solid var(--gold); border-bottom:1px solid var(--gold);
+  }
+  .ticker .label{
+    display:inline-block; background:var(--red); color:#fff;
+    font-size:11px; font-weight:700; letter-spacing:1px;
+    padding:3px 10px; margin-right:10px; vertical-align:middle;
+  }
+  .ticker-track{
+    display:inline-block; padding-left:100%;
+    animation: scroll-left 26s linear infinite;
+    font-size:13.5px;
+  }
+  .ticker-track span{margin-right:48px;}
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-100%);} }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{animation:none; padding-left:0;} }
+
+  /* NAV */
+  nav.main-nav{
+    background:var(--green); border-bottom:3px solid var(--navy);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap;
+  }
+  .nav-inner a{
+    color:#fff; text-decoration:none; font-size:13.5px; font-weight:600;
+    letter-spacing:.3px; padding:11px 18px; text-transform:uppercase;
+    border-right:1px solid rgba(255,255,255,.18);
+  }
+  .nav-inner a:hover{background:rgba(0,0,0,.15);}
+
+  /* BREADCRUMB */
+  .breadcrumb{
+    max-width:1180px; margin:0 auto; padding:9px 20px; font-size:12.5px; color:var(--ink-soft);
+  }
+  .breadcrumb a{color:var(--link); text-decoration:none;}
+
+  /* LAYOUT */
+  .wrap{max-width:1180px; margin:0 auto; padding:0 20px 40px;}
+  .layout{display:grid; grid-template-columns:2.1fr 1fr; gap:26px; align-items:start;}
+  @media (max-width:860px){ .layout{grid-template-columns:1fr;} }
+
+  .section-title{
+    display:flex; align-items:center; gap:10px; margin:26px 0 16px;
+  }
+  .section-title h2{font-size:19px; color:var(--navy);}
+  .section-title::after{
+    content:""; flex:1; height:2px;
+    background:repeating-linear-gradient(90deg, var(--saffron) 0 8px, var(--green) 8px 16px);
+    opacity:.55;
+  }
+
+  /* MEMO / CIRCULAR CARD */
+  .circular{
+    background:var(--card); border:1px solid var(--line);
+    padding:20px 22px; margin-bottom:20px; position:relative;
+    box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .circular::before{
+    content:""; position:absolute; inset:6px;
+    border:1px dashed var(--line); pointer-events:none;
+  }
+  .circular-head{
+    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    font-size:12px; color:var(--ink-soft); margin-bottom:10px;
+    font-family:'Courier Prime',monospace;
+  }
+  .stamp{
+    border:2px solid var(--red); color:var(--red); font-weight:700;
+    font-size:11px; letter-spacing:1px; padding:3px 9px;
+    transform:rotate(-6deg); border-radius:3px; flex:none;
+    text-transform:uppercase;
+  }
+  .circular h3{font-size:20px; color:var(--ink); margin-bottom:6px;}
+  .circular h3 a{color:inherit; text-decoration:none;}
+  .circular h3 a:hover{text-decoration:underline;}
+  .circular p.dek{color:var(--ink-soft); margin:8px 0 12px; font-size:14.5px;}
+  .circular .meta-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-size:12px; color:var(--ink-soft); border-top:1px dotted var(--line); padding-top:10px;
+  }
+  .tags span{
+    display:inline-block; background:var(--paper-2); border:1px solid var(--line);
+    font-size:11px; padding:2px 8px; margin-right:6px; border-radius:2px;
+  }
+  .read-more{
+    font-weight:700; font-size:12.5px; text-decoration:none;
+    color:var(--navy-2); border-bottom:2px solid var(--saffron);
+  }
+
+  /* SIDEBAR */
+  .box{
+    background:var(--card); border:1px solid var(--line); margin-bottom:20px;
+  }
+  .box h4{
+    background:var(--navy); color:#fff; font-size:13px; letter-spacing:.5px;
+    text-transform:uppercase; padding:10px 14px; font-family:'Martel',serif;
+  }
+  .box .inner{padding:14px 16px;}
+  .link-list{list-style:none; margin:0; padding:0;}
+  .link-list li{
+    border-bottom:1px dotted var(--line); padding:8px 0; font-size:13.5px;
+  }
+  .link-list li:last-child{border-bottom:none;}
+  .link-list a{text-decoration:none;}
+  .link-list a:hover{text-decoration:underline;}
+  .link-list .arrow{color:var(--saffron); margin-right:6px; font-weight:700;}
+
+  .counter{
+    display:flex; justify-content:center; gap:5px; padding:16px;
+  }
+  .counter .digit{
+    background:#0c0c0c; color:#2bff6b; font-family:'Courier Prime',monospace;
+    font-size:22px; font-weight:700; width:26px; text-align:center;
+    padding:6px 0; border-radius:2px; border:1px solid #000;
+  }
+  .counter-caption{
+    text-align:center; font-size:11.5px; color:var(--ink-soft); padding-bottom:14px;
+  }
+
+  .notice-item{padding:10px 0; border-bottom:1px dotted var(--line); font-size:13px;}
+  .notice-item:last-child{border-bottom:none;}
+  .notice-item .date{font-family:'Courier Prime',monospace; font-size:11px; color:var(--gold); display:block; margin-bottom:2px;}
+
+  /* ABOUT STRIP */
+  .about-strip{
+    background:var(--paper-2); border:1px solid var(--line); padding:22px 24px; margin:30px 0;
+    display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;
+  }
+  .about-strip .chakra-lg{width:52px; height:52px; flex:none;}
+  .about-strip h2{font-size:18px; color:var(--navy); margin-bottom:8px;}
+  .about-strip p{font-size:14px; color:var(--ink-soft); max-width:70ch;}
+
+  /* FOOTER */
+  footer{
+    background:var(--navy); color:#c7d3e6; margin-top:36px;
+  }
+  .footer-inner{
+    max-width:1180px; margin:0 auto; padding:34px 20px 18px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:26px;
+  }
+  @media (max-width:760px){ .footer-inner{grid-template-columns:1fr 1fr;} }
+  .footer-inner h5{
+    color:#f6e6bd; font-size:12.5px; letter-spacing:.6px; text-transform:uppercase;
+    margin:0 0 12px; font-family:'Martel',serif;
+  }
+  .footer-inner ul{list-style:none; margin:0; padding:0;}
+  .footer-inner li{margin-bottom:7px; font-size:13px;}
+  .footer-inner a{color:#c7d3e6; text-decoration:none;}
+  .footer-inner a:hover{text-decoration:underline; color:#fff;}
+  .footer-bottom{
+    border-top:1px solid #1c3c6b; padding:16px 20px; font-size:11.5px;
+    text-align:center; color:#8fa2c2;
+  }
+  .disclaimer{
+    max-width:1180px; margin:0 auto; padding:0 20px 16px; font-size:11.5px; color:#8fa2c2; text-align:center;
+  }
+</style>
+</head>
+<body>
+<!-- Hidden reference image: not rendered on screen, present in source only -->
+<img src="kid.jpeg" alt="" aria-hidden="true" style="display:none;">  
+
+<a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+<div class="a11y-bar">
+  <div class="left">
+    <a href="#main-content">Skip to Main Content</a>
+    <a href="#footer-sitemap">Sitemap</a>
+    <a href="#screen-reader">Screen Reader Access</a>
+  </div>
+  <div class="right">
+    <span class="txt-btns" role="group" aria-label="Text size">
+      <button type="button" onclick="resizeText(-1)" aria-label="Decrease text size">A-</button>
+      <button type="button" onclick="resizeText(0)" aria-label="Reset text size">A</button>
+      <button type="button" onclick="resizeText(1)" aria-label="Increase text size">A+</button>
+    </span>
+    <button type="button" class="contrast-btn" onclick="toggleContrast()">⇄ High Contrast</button>
+    <a href="#" onclick="return false;">हिन्दी</a>
+  </div>
+</div>
+
+<div class="tricolor"><span class="s1"></span><span class="s2"></span><span class="s3"></span></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#0b2545" stroke-width="3"/>
+          <g stroke="#a97a1d" stroke-width="2">
+            <line x1="50" y1="8" x2="50" y2="92"/>
+            <line x1="8" y1="50" x2="92" y2="50"/>
+            <line x1="17" y1="17" x2="83" y2="83"/>
+            <line x1="83" y1="17" x2="17" y2="83"/>
+            <line x1="50" y1="8" x2="65" y2="35"/>
+            <line x1="50" y1="8" x2="35" y2="35"/>
+            <line x1="50" y1="92" x2="65" y2="65"/>
+            <line x1="50" y1="92" x2="35" y2="65"/>
+            <line x1="8" y1="50" x2="35" y2="65"/>
+            <line x1="8" y1="50" x2="35" y2="35"/>
+            <line x1="92" y1="50" x2="65" y2="65"/>
+            <line x1="92" y1="50" x2="65" y2="35"/>
+          </g>
+          <circle cx="50" cy="50" r="10" fill="#0b2545"/>
+          <circle cx="50" cy="50" r="4" fill="#a97a1d"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="eyebrow">Independent Citizen Portal · Est. 2026</div>
+        <h1>Department of Digital Dispatches</h1>
+        <div class="hindi">डिजिटल डाक विभाग — DD's Personal Web Log</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="clock" id="liveClock">--:--:--</div>
+      <div>File Portal Status: <strong style="color:var(--green);">ऑनलाइन / ONLINE</strong></div>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" role="marquee" aria-label="Latest notifications">
+  <div class="ticker-track">
+    <span class="label">NEW</span>
+    <span>Circular F.No. 07/2026-CTF published on JWT alg:none exploitation —</span>
+    <span>Advisory F.No. 06/2026-RGX on reverse-engineering obsolete cartridges now available for download —</span>
+    <span>Portal upgraded for improved accessibility compliance (parody GIGW notice) —</span>
+    <span>Applications invited for informal CTF study group, see Notice Board —</span>
+    <span class="label" style="background:#0e7a1a;">NOTE</span>
+    <span>This site is a personal blog styled after government portals. It is not an official government website.</span>
+  </div>
+</div>
+
+<nav class="main-nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="#main-content">Home</a>
+    <a href="#circulars">Circulars (Posts)</a>
+    <a href="#about">About the Officer</a>
+    <a href="#downloads">Downloads</a>
+    <a href="#notice-board">Notice Board</a>
+    <a href="#footer-sitemap">Contact</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="#main-content">Home</a> &nbsp;›&nbsp; <span>Blog Homepage</span>
+</div>
+
+<main class="wrap" id="main-content">
+
+  <div class="about-strip" id="about">
+    <svg class="chakra-lg" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#a97a1d" stroke-width="3"/>
+      <circle cx="50" cy="50" r="6" fill="#0b2545"/>
+    </svg>
+    <div>
+      <h2>Office Memorandum: Purpose of This Portal</h2>
+      <p>This is the personal web log of DD — B.Tech CSE (Generative AI) student, CTF challenge-builder with CYCO, and general tinkerer — filed in the visual language of an Indian government website purely as a stylistic homage to the early-2000s public-sector web. Posts below are catalogued as "Circulars" for the fun of it. <strong>No affiliation with any government body is claimed or implied.</strong></p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="section-title" id="circulars"><h2>Recent Circulars</h2></div>
+
+      <article class="circular">
+        <div class="circular-head">
+          <span>F.No. 07/2026-CTF</span>
+          <span>Dated: 29 July 2026</span>
+        </div>
+        <span class="stamp">Circular</span>
+        <h3><a href="#">Notice: On the Exploitation of <code>alg:none</code> in JSON Web Tokens</a></h3>
+        <p class="dek">A field note from recent CTF work — how an unsigned JWT header slips past a lazily-written verifier, and what a properly guarded auth flow should check for instead.</p>
+        <div class="meta-row">
+          <div class="tags"><span>CTF</span><span>Web Security</span><span>Writeup</span></div>
+          <a class="read-more" href="#">Read Full Circular →</a>
+        </div>
+      </article>
+
+      <article class="circular">
+        <div class="circular-head">
+          <span>F.No. 06/2026-RGX</span>
+          <span>Dated: 21 July 2026</span>
+        </div>
+        <span class="stamp" style="border-color:var(--green); color:var(--green);">Advisory</span>
+        <h3><a href="#">Advisory Regarding Reverse-Engineering of Obsolete Game Cartridges</a></h3>
+        <p class="dek">Notes from disc-image and cartridge RE sessions — tooling, common pitfalls, and why the old engines are more interesting to take apart than to play.</p>
+        <div class="meta-row">
+          <div class="tags"><span>Game Modding</span><span>Reverse Engineering</span></div>
+          <a class="read-more" href="#">Read Full Circular →</a>
+        </div>
+      </article>
+
+      <article class="circular">
+        <div class="circular-head">
+          <span>F.No. 05/2026-NET</span>
+          <span>Dated: 14 July 2026</span>
+        </div>
+        <span class="stamp" style="border-color:var(--gold); color:var(--gold);">Public Notice</span>
+        <h3><a href="#">On the Aesthetics of the Early Internet, 1998–2004</a></h3>
+        <p class="dek">Marquee tags, visitor counters, and table-based layouts — a small tribute to the web that taught a generation to build weird, personal things online.</p>
+        <div class="meta-row">
+          <div class="tags"><span>Web History</span><span>Design</span></div>
+          <a class="read-more" href="#">Read Full Circular →</a>
+        </div>
+      </article>
+
+      <article class="circular">
+        <div class="circular-head">
+          <span>F.No. 04/2026-SEC</span>
+          <span>Dated: 03 July 2026</span>
+        </div>
+        <span class="stamp">Circular</span>
+        <h3><a href="#">Explainer: WEP CRC/XOR Attack Mechanics</a></h3>
+        <p class="dek">A walk through why WEP's integrity check falls apart under a chosen-plaintext attack, and how that maps to the CTF challenges built around it.</p>
+        <div class="meta-row">
+          <div class="tags"><span>Networking</span><span>CTF</span></div>
+          <a class="read-more" href="#">Read Full Circular →</a>
+        </div>
+      </article>
+
+      <article class="circular">
+        <div class="circular-head">
+          <span>F.No. 03/2026-ARC</span>
+          <span>Dated: 26 June 2026</span>
+        </div>
+        <span class="stamp" style="border-color:var(--green); color:var(--green);">Advisory</span>
+        <h3><a href="Dear_jeff.7z">MAAN-KI-BAAT-WITH-FRANDS</a></h3>
+        <p class="dek">Frands agar mai apko apnay priya mitar jeffery kay baray mai kuch btau to kuch nai bolo gayna.</p>
+        <div class="meta-row">
+          <div class="tags"><span>FRANDS</span><span>MAAN KI BAAT</span></div>
+          <a class="read-more" href="#">Read Full Circular →</a>
+        </div>
+      </article>
+
+    </div>
+
+    <aside>
+      <div class="box">
+        <h4>Important Links</h4>
+        <div class="inner">
+          <ul class="link-list">
+            <li><span class="arrow">▸</span><a href="#" id="screen-reader">Screen Reader Access</a></li>
+            <li><span class="arrow">▸</span><a href="#downloads">Downloads (Résumé / Notes)</a></li>
+            <li><span class="arrow">▸</span><a href="#">Right to Information (About My Code)</a></li>
+            <li><span class="arrow">▸</span><a href="#">Tender Notice: CTF Teammates Wanted</a></li>
+            <li><span class="arrow">▸</span><a href="#footer-sitemap">Sitemap</a></li>
+            <li><span class="arrow">▸</span><a href="#">Feedback / Grievance Form</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box">
+        <h4>Visitor Counter</h4>
+        <div class="counter" id="counter" aria-label="Visitor count">
+          <span class="digit">0</span><span class="digit">0</span><span class="digit">4</span>
+          <span class="digit">1</span><span class="digit">2</span><span class="digit">7</span>
+        </div>
+        <div class="counter-caption">Total Visitors Since Portal Launch</div>
+      </div>
+
+      <div class="box" id="notice-board">
+        <h4>Notice Board</h4>
+        <div class="inner">
+          <div class="notice-item"><span class="date">28.07.2026</span>Portal redesigned for the third time; previous design retired without ceremony.</div>
+          <div class="notice-item"><span class="date">19.07.2026</span>CYCO CTF infra maintenance window scheduled — see Circulars for details soon.</div>
+          <div class="notice-item"><span class="date">05.07.2026</span>Comments section under construction. Kindly bear with the inconvenience.</div>
+        </div>
+      </div>
+
+      <div class="box" id="downloads">
+        <h4>Downloads</h4>
+        <div class="inner">
+          <ul class="link-list">
+            <li><span class="arrow">▸</span><a href="#">Reading List — Creepypasta &amp; Horror Fiction (PDF)</a></li>
+            <li><span class="arrow">▸</span><a href="#">CTF Cheat-Sheet: Common Web Exploits (PDF)</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer id="footer-sitemap">
+  <div class="footer-inner">
+    <div>
+      <h5>Sitemap</h5>
+      <ul>
+        <li><a href="#main-content">Home</a></li>
+        <li><a href="#circulars">All Circulars</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#notice-board">Notice Board</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Policies</h5>
+      <ul>
+        <li><a href="#">Terms of Use (Be Nice)</a></li>
+        <li><a href="#">Privacy Notice</a></li>
+        <li><a href="#">Copyright Policy</a></li>
+        <li><a href="#">Hyperlinking Policy</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Connect</h5>
+      <ul>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Email</a></li>
+        <li><a href="#">CYCO Club Page</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Visitor Info</h5>
+      <ul>
+        <li>Best viewed at any screen size</li>
+        <li>Content managed by DD</li>
+        <li>Site last updated: 01.08.2026</li>
+      </ul>
+    </div>
+  </div>
+  <div class="disclaimer">
+    This is a personal, independently run blog styled as a tribute to the visual language of Indian government web portals. It is not an official government website and is not affiliated with, endorsed by, or representative of the Government of India or any government body.
+  </div>
+  <div class="footer-bottom">© 2026 DD — Department of Digital Dispatches. All opinions are personal.</div>
+</footer>
+
+<script>
+  function updateClock(){
+    const now = new Date();
+    document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN', {hour12:false});
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  let textScale = 1;
+  function resizeText(dir){
+    if(dir === 0){ textScale = 1; }
+    else { textScale = Math.min(1.3, Math.max(0.85, textScale + dir*0.1)); }
+    document.body.style.fontSize = (16*textScale) + 'px';
+  }
+
+  function toggleContrast(){
+    document.body.classList.toggle('contrast');
+  }
+
+  // gentle visitor counter tick, purely decorative
+  (function(){
+    const digits = document.querySelectorAll('#counter .digit');
+    let value = 4127;
+    setInterval(() => {
+      value += Math.random() < 0.4 ? 1 : 0;
+      const s = String(value).padStart(6,'0');
+      digits.forEach((d,i) => d.textContent = s[i]);
+    }, 4000);
+  })();
+</script>
+
+</body>
+</html>
