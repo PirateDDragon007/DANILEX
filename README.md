@@ -1,5 +1,5 @@
 WRITEUP_DANILEx
-#DANILEX(mid)
+DANILEX(mid)
 DANILEX is a CTF(Capture-the-flag) based question which feature the theme's of FORENSIC and OSINT.
 
 Description=>The dark web is filled with stuff that is unhuman and accient knowledge, their are some people who trade and live inside dark web and once you start getting deep in their stuff their no turning back, as for you have a task find the source of the image and people behind it all,they are known to give their victims serial number or code.
